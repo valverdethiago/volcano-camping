@@ -2,6 +2,7 @@
 bin/*
 /.classpath
 /.project
+/.iml
 .gradle/*
 gradle/*
 out/*
