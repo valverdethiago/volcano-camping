@@ -12,10 +12,14 @@ import java.util.Collection;
 @RestController
 public class ReservationController {
 
-    @Autowired
-    private BookingService bookingService;
+    private final BookingService bookingService;
 
-    @GetMapping(path = "/api/reservation")
+    @Autowired
+    public ReservationController(BookingService bookingService) {
+        this.bookingService = bookingService;
+    }
+
+    @GetMapping(path = "/api/booking/availableDates")
     public ResponseEntity<Collection<LocalDate>> getAvailableDates(LocalDate initialDate, LocalDate endDate) {
         return ResponseEntity.ok(this.bookingService.findAvailableDates(initialDate, endDate));
     }

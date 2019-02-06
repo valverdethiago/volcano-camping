@@ -1,7 +1,8 @@
-package com.upgrade.volcanocamping.services;
+package com.upgrade.volcanocamping.service;
 
 import com.github.javafaker.Faker;
 import com.google.common.collect.ImmutableList;
+import com.upgrade.volcanocamping.exceptions.BookingAlreadyFinishedException;
 import com.upgrade.volcanocamping.exceptions.InvalidDateIntervalException;
 import com.upgrade.volcanocamping.model.Booking;
 import com.upgrade.volcanocamping.model.User;
@@ -20,6 +21,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Optional;
+import java.util.Random;
 import java.util.Set;
 
 import static org.junit.Assert.*;
@@ -161,6 +164,53 @@ public class BookingServiceTest {
                 LocalDate.now().plusDays(10), LocalDate.now().plusDays(12));
         //Assert
         verify(bookingRepository, times(1)).save(any());
+    }
+
+    @Test
+    public void givenEmptyBookingIdThenShouldThrowException() {
+        //Arrange
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage(BOOKING_ID_IS_MANDATORY_EXCEPTION_MESSAGE);
+        // Act
+        bookingService.cancel(null);
+        //Assert is not necessary because we expect that an exception will be thrown
+    }
+
+    @Test
+    public void givenInvalidBookingIdThenShouldThrowException() {
+        //Arrange
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage(INVALID_BOOKING_ID_EXCEPTION_MESSAGE);
+        when(bookingRepository.findById(anyLong())).thenReturn(Optional.ofNullable(null));
+        // Act
+        bookingService.cancel(new Random().nextLong());
+        //Assert is not necessary because we expect that an exception will be thrown
+    }
+
+    @Test(expected = BookingAlreadyFinishedException.class)
+    public void givenAlreadyFinishedBookingThenShouldThrowException() {
+        //Arrange
+        Booking booking = createFakeBooking("fake-memeber@mail.com",
+                LocalDate.now().minusDays(10), LocalDate.now().minusDays(8));
+        when(bookingRepository.findById(anyLong())).thenReturn(Optional.ofNullable(booking));
+        // Act
+        bookingService.cancel(new Random().nextLong());
+        //Assert is not necessary because we expect that an exception will be thrown
+    }
+
+    @Test
+    public void givenValidBookingIdThenShouldCallMethod() {
+        //Arrange
+        Long expectedId = new Random().nextLong();
+        Booking booking = createFakeBooking("fake-memeber@mail.com",
+                LocalDate.now().plusDays(1), LocalDate.now().plusDays(2));
+        booking.setId(expectedId);
+        when(bookingRepository.findById(anyLong())).thenReturn(
+                Optional.of(booking));
+        // Act
+        bookingService.cancel(expectedId);
+        //Assert
+        verify(bookingRepository, times(1)).save(booking);
     }
 
     private Booking createFakeBooking(String memberEmail,

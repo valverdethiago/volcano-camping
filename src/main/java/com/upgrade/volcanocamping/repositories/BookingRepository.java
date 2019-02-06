@@ -20,8 +20,9 @@ import java.util.List;
 public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     @Query(" select e from Booking e " +
-            " where e.initialDate between :initialDate and :endDate" +
-            "    or e.departureDate between :initialDate and :endDate " )
+            " where e.cancelationDate is null " +
+            "   and ( e.initialDate between :initialDate and :endDate" +
+            "         or e.departureDate between :initialDate and :endDate ) "  )
     List<Booking> findReservationsBetweenDates(@Param("initialDate") LocalDate initialDate,
                                                @Param("endDate") LocalDate endDate);
 }

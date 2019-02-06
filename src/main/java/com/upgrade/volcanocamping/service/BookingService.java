@@ -11,4 +11,6 @@ public interface BookingService {
     Set<LocalDate> findAvailableDates(LocalDate initialDate, LocalDate endDate);
 
     Booking book(User user, LocalDate startDate, LocalDate endDate);
+
+    void cancel(Long bookingId);
 }

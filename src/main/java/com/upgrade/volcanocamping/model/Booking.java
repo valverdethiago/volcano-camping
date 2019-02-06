@@ -21,6 +21,8 @@ public class Booking implements Serializable {
     private LocalDate initialDate;
     @Column(name="departure_date")
     private LocalDate departureDate;
+    @Column(name="cancelation_date")
+    private LocalDateTime cancelationDate;
 
     public Long getId() {
         return id;
@@ -52,5 +54,13 @@ public class Booking implements Serializable {
 
     public void setDepartureDate(LocalDate departureDate) {
         this.departureDate = departureDate;
+    }
+
+    public LocalDateTime getCancelationDate() {
+        return cancelationDate;
+    }
+
+    public void setCancelationDate(LocalDateTime cancelationDate) {
+        this.cancelationDate = cancelationDate;
     }
 }
