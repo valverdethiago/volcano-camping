@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -22,6 +23,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     @Query(" select e from Reservation e " +
             " where e.initialDate between :initialDate and :endDate" +
             "    or e.departureDate between :initialDate and :endDate " )
-    List<Reservation> findReservationsBetweenDates(@Param("initialDate") LocalDateTime initialDate,
-                                                   @Param("endDate") LocalDateTime endDate);
+    List<Reservation> findReservationsBetweenDates(@Param("initialDate") LocalDate initialDate,
+                                                   @Param("endDate") LocalDate endDate);
 }

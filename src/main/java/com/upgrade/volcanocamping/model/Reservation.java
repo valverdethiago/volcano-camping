@@ -2,6 +2,7 @@ package com.upgrade.volcanocamping.model;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -17,9 +18,9 @@ public class Reservation implements Serializable {
     @Embedded
     private User user;
     @Column(name="initial_date")
-    private LocalDateTime initialDate;
+    private LocalDate initialDate;
     @Column(name="departure_date")
-    private LocalDateTime departureDate;
+    private LocalDate departureDate;
 
     public Long getId() {
         return id;
@@ -37,19 +38,19 @@ public class Reservation implements Serializable {
         this.user = user;
     }
 
-    public LocalDateTime getInitialDate() {
+    public LocalDate getInitialDate() {
         return initialDate;
     }
 
-    public void setInitialDate(LocalDateTime initialDate) {
+    public void setInitialDate(LocalDate initialDate) {
         this.initialDate = initialDate;
     }
 
-    public LocalDateTime getDepartureDate() {
+    public LocalDate getDepartureDate() {
         return departureDate;
     }
 
-    public void setDepartureDate(LocalDateTime departureDate) {
+    public void setDepartureDate(LocalDate departureDate) {
         this.departureDate = departureDate;
     }
 }

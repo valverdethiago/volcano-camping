@@ -7,8 +7,8 @@
             </column>
             <column name="user_email" type="VARCHAR(255)"/>
             <column name="user_full_name" type="VARCHAR(255)"/>
-            <column name="initial_date" type="DATETIME"/>
-            <column name="departure_date" type="DATETIME"/>
+            <column name="initial_date" type="DATE"/>
+            <column name="departure_date" type="DATE"/>
         </createTable>
     </changeSet>
 </databaseChangeLog>
