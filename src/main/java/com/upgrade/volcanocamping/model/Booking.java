@@ -9,8 +9,8 @@ import java.time.LocalDateTime;
  * Created by valve on 03/02/2019.
  */
 @Entity
-@Table(name = "reservation")
-public class Reservation implements Serializable {
+@Table(name = "booking")
+public class Booking implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,7 +1,7 @@
 package com.upgrade.volcanocamping.repositories;
 
 import com.github.javafaker.Faker;
-import com.upgrade.volcanocamping.model.Reservation;
+import com.upgrade.volcanocamping.model.Booking;
 import com.upgrade.volcanocamping.model.User;
 import org.assertj.core.util.Lists;
 import org.junit.Test;
@@ -12,7 +12,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.List;
 import static org.junit.Assert.*;
@@ -22,59 +21,59 @@ import static org.hamcrest.Matchers.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
 @Transactional
-public class ReservationRepositoryTest {
+public class BookingRepositoryTest {
 	
 	@Autowired
-	private ReservationRepository reservationRepository;
+	private BookingRepository bookingRepository;
 	private Faker faker = new Faker();
 	
 	@Test
 	public void shouldInsertSimpleReservation() {
 		// Arrange
-		Reservation reservation = this.createAndSaveReservation("fake-member@gmail.com",
+		Booking booking = this.createAndSaveReservation("fake-member@gmail.com",
 				LocalDate.now(), LocalDate.now().plusDays(1));
 		// Act
-		List<Reservation> reservationList = Lists.newArrayList(this.reservationRepository.findAll());
+		List<Booking> bookingList = Lists.newArrayList(this.bookingRepository.findAll());
 		// Assert
-		assertNotNull(reservation.getId());
-		assertThat(reservationList, containsInAnyOrder(reservation));
+		assertNotNull(booking.getId());
+		assertThat(bookingList, containsInAnyOrder(booking));
 	}
 
 	@Test
 	public void shouldReturnSingleReservationInGivenPeriod() {
 		// Arrange
-		Reservation reservation = this.createAndSaveReservation("fake-member@gmail.com",
+		Booking booking = this.createAndSaveReservation("fake-member@gmail.com",
 				LocalDate.of(2019, Month.JANUARY, 1),
 				LocalDate.of(2019, Month.JANUARY, 3));
-		Reservation reservation2 = this.createAndSaveReservation("fake-member2@gmail.com",
+		Booking booking2 = this.createAndSaveReservation("fake-member2@gmail.com",
 				LocalDate.of(2019, Month.FEBRUARY, 1),
 				LocalDate.of(2019, Month.FEBRUARY, 3));
 		// Act
-		List<Reservation> reservationList = this.reservationRepository.findReservationsBetweenDates(
+		List<Booking> bookingList = this.bookingRepository.findReservationsBetweenDates(
 				LocalDate.of(2019, Month.JANUARY, 1),
 				LocalDate.of(2019, Month.JANUARY, 31)
 		);
 
 		// Assert
-		assertThat(reservationList, not(empty()));
-		assertThat(reservationList, hasSize(1) );
-		assertThat(reservationList, hasItem(reservation));
-		assertThat(reservationList, not(hasItem(reservation2)));
+		assertThat(bookingList, not(empty()));
+		assertThat(bookingList, hasSize(1) );
+		assertThat(bookingList, hasItem(booking));
+		assertThat(bookingList, not(hasItem(booking2)));
 
 	}
 
 
-	private Reservation createAndSaveReservation(String memberEmail,
-												LocalDate initialDate,
-												LocalDate departureDate) {
+	private Booking createAndSaveReservation(String memberEmail,
+											 LocalDate initialDate,
+											 LocalDate departureDate) {
 		User user = new User();
 		user.setEmail(memberEmail);
 		user.setFullName(faker.name().fullName());
-		Reservation reservation = new Reservation();
-		reservation.setUser(user);
-		reservation.setInitialDate(initialDate);
-		reservation.setDepartureDate(departureDate);
-		return this.reservationRepository.save(reservation);
+		Booking booking = new Booking();
+		booking.setUser(user);
+		booking.setInitialDate(initialDate);
+		booking.setDepartureDate(departureDate);
+		return this.bookingRepository.save(booking);
 	}
 
 }
