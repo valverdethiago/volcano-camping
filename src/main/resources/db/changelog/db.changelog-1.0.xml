@@ -11,4 +11,11 @@
             <column name="departure_date" type="DATE"/>
         </createTable>
     </changeSet>
+    <changeSet author="valverde.thiago" id="add-cancelation-date">
+        <addColumn tableName="booking">
+            <column name="cancelation_date" type="DATETIME"/>
+        </addColumn>
+
+    </changeSet>
+
 </databaseChangeLog>
