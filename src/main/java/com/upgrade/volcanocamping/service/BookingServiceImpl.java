@@ -29,6 +29,7 @@ public class BookingServiceImpl implements BookingService {
             "The campsite can be reserved minimum 1 day(s) ahead of arrival and up to 1 month in advance";
     public static final String BOOKING_ID_IS_MANDATORY_EXCEPTION_MESSAGE = "Booking ID is mandatory";
     public static final String INVALID_BOOKING_ID_EXCEPTION_MESSAGE = "Invalid Booking ID";
+
     private final BookingRepository bookingRepository;
 
     @Autowired
@@ -43,6 +44,9 @@ public class BookingServiceImpl implements BookingService {
         }
         if (endDate == null) {
             endDate = startDate.plusDays(30);
+        }
+        if(startDate.isAfter(endDate)) {
+            throw new IllegalArgumentException(INVALID_BOOKING_DATES_EXCEPTION_MESSAGE);
         }
         List<Booking> bookings = this.bookingRepository.findReservationsBetweenDates(startDate, endDate);
         if (bookings.isEmpty()) {

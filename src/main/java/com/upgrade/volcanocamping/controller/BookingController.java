@@ -4,6 +4,7 @@ import com.upgrade.volcanocamping.dto.BookingDto;
 import com.upgrade.volcanocamping.model.Booking;
 import com.upgrade.volcanocamping.model.User;
 import com.upgrade.volcanocamping.service.BookingService;
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -15,9 +16,11 @@ import javax.websocket.server.PathParam;
 import java.time.LocalDate;
 import java.util.AbstractMap;
 import java.util.Collection;
+import java.util.Set;
 
 @RestController
-@Order(2)
+@Api(basePath = "/api/booking", description = "Operations about bookings")
+@RequestMapping(path = "/api/booking")
 public class BookingController {
 
     private final BookingService bookingService;
@@ -27,14 +30,20 @@ public class BookingController {
         this.bookingService = bookingService;
     }
 
-    @GetMapping(path = "/api/booking/availableDates")
+    @GetMapping(path = "/availableDates")
+    @ApiOperation(value = "Finds available dates for booking",
+            response = LocalDate.class,
+            responseContainer = "List" )
     public ResponseEntity<Collection<LocalDate>> getAvailableDates(
-            @RequestParam(value="startDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
-            @RequestParam(value="endDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
+            @ApiParam(name = "startDate", value = "Start date for the search", type = "String", format = "yyyy-MM-dd", required = false)
+            @RequestParam(value = "startDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+            @ApiParam(name = "endDate", value = "End date for the search", type = "String", format = "yyyy-MM-dd", required = false)
+            @RequestParam(value = "endDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
         return ResponseEntity.ok(this.bookingService.findAvailableDates(startDate, endDate));
     }
 
-    @PostMapping(path = "/api/booking")
+    @PostMapping
+    @ApiOperation(value = "Record booking for the user in the selected date range")
     public ResponseEntity<Long> book(@RequestBody BookingDto bookingDto) {
         User user = new User();
         user.setEmail(bookingDto.getEmail());
@@ -43,9 +52,10 @@ public class BookingController {
         return ResponseEntity.ok(booking.getId());
     }
 
-    @DeleteMapping(path = "/api/booking/{bookingId}")
+    @DeleteMapping(path = "/{bookingId}")
     @ResponseStatus(value = HttpStatus.OK)
-    public void cancel(@PathVariable(name="bookingId", required = true) Long bookingId) {
+    @ApiOperation(value = "Cancel booking with the given id")
+    public void cancel(@PathVariable(name = "bookingId", required = true) Long bookingId) {
         this.bookingService.cancel(bookingId);
     }
 
@@ -56,6 +66,7 @@ public class BookingController {
     public ResponseEntity<AbstractMap.SimpleEntry<String, String>> handle(Exception exception) {
         AbstractMap.SimpleEntry<String, String> response =
                 new AbstractMap.SimpleEntry<>("message", exception.getMessage());
+        exception.printStackTrace();
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 }
