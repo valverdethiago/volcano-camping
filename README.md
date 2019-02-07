@@ -34,12 +34,15 @@ A complete documentation of the endpoints is available at the file ./docs/api-do
 For the REST API a spring-boot application was build with all the endpoints specified on the problem statement. All records are being persisted on a MySQL database that can be configured on ./src/main/resources/application.properties.
 
 To check all the endpoints and trigger some requests against the API please check the following url:
-
+```
 [protocol]://[host]:[port]/swagger-ui.html
+```
 
 For example: http://localhost:8080/swagger-ui.html
 
 A screen with all the endpoints will be shown, just like the picture above:
+
+![alt text](./docs/swagger-ui-print.png)
 
 
 ### Unit Testing ###
@@ -49,8 +52,9 @@ All the tests are executed in junit tests under ./src/test folder. Their executi
 For managing the dependencies and build the application distributable file we are using gradle in version 5.2.
 
 To build the app the machine should have java 8 or later version and version 5.2 of gradle. To build the app please clone this repo and under the root folder type the following command:
-
-gradle build 
+```
+gradle build
+```
 
 This will run all unit tests and build the jar file that runs it
 
