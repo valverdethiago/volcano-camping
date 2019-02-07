@@ -45,10 +45,13 @@ public class BookingController {
     @PostMapping
     @ApiOperation(value = "Record booking for the user in the selected date range")
     public ResponseEntity<Long> book(@RequestBody BookingDto bookingDto) {
-        User user = new User();
-        user.setEmail(bookingDto.getEmail());
-        user.setFullName(bookingDto.getFullName());
-        Booking booking = this.bookingService.book(user, bookingDto.getInitialDate(), bookingDto.getDepartureDate());
+        Booking booking = this.bookingService.book(
+                User.builder()
+                        .email(bookingDto.getEmail())
+                        .fullName(bookingDto.getFullName())
+                        .build(),
+                bookingDto.getInitialDate(),
+                bookingDto.getDepartureDate());
         return ResponseEntity.ok(booking.getId());
     }
 

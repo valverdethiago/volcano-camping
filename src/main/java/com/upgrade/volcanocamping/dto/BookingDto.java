@@ -2,6 +2,10 @@ package com.upgrade.volcanocamping.dto;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import java.time.LocalDate;
@@ -9,6 +13,10 @@ import java.time.LocalDate;
 /**
  * Created by valve on 06/02/2019.
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @ApiModel(value="Booking", description = "Booking Request Object")
 public class BookingDto {
     @ApiModelProperty(value="User email", dataType = "String", required = true)
@@ -19,36 +27,4 @@ public class BookingDto {
     private LocalDate initialDate;
     @ApiModelProperty(value="End date for reservation", dataType = "String", required = true)
     private LocalDate departureDate;
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getFullName() {
-        return fullName;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
-
-    public LocalDate getInitialDate() {
-        return initialDate;
-    }
-
-    public void setInitialDate(LocalDate initialDate) {
-        this.initialDate = initialDate;
-    }
-
-    public LocalDate getDepartureDate() {
-        return departureDate;
-    }
-
-    public void setDepartureDate(LocalDate departureDate) {
-        this.departureDate = departureDate;
-    }
 }

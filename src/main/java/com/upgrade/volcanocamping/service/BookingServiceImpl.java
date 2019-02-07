@@ -86,11 +86,9 @@ public class BookingServiceImpl implements BookingService {
         if (daysBetweenNowAndStart < 1 || daysBetweenNowAndStart > 30) {
             throw new InvalidDateIntervalException(INVALID_LIMITS);
         }
-        Booking booking = new Booking();
-        booking.setInitialDate(startDate);
-        booking.setDepartureDate(endDate);
-        booking.setUser(user);
-        return bookingRepository.save(booking);
+        return bookingRepository.save(
+                Booking.builder().initialDate(startDate).departureDate(endDate).user(user).build()
+        );
     }
 
     @Override
@@ -103,7 +101,7 @@ public class BookingServiceImpl implements BookingService {
         if (elem.getDepartureDate().isBefore(LocalDate.now())) {
             throw new BookingAlreadyFinishedException();
         }
-        elem.setCancelationDate(LocalDateTime.now());
+        elem.setCancellationDate(LocalDateTime.now());
         this.bookingRepository.save(elem);
 
 

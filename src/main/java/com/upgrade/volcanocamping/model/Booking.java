@@ -1,5 +1,7 @@
 package com.upgrade.volcanocamping.model;
 
+import lombok.*;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -10,6 +12,11 @@ import java.time.LocalDateTime;
  */
 @Entity
 @Table(name = "booking")
+@Data
+@Builder
+@EqualsAndHashCode(of={"id"})
+@NoArgsConstructor
+@AllArgsConstructor
 public class Booking implements Serializable {
 
     @Id
@@ -21,46 +28,7 @@ public class Booking implements Serializable {
     private LocalDate initialDate;
     @Column(name="departure_date")
     private LocalDate departureDate;
-    @Column(name="cancelation_date")
-    private LocalDateTime cancelationDate;
+    @Column(name="cancellation_date")
+    private LocalDateTime cancellationDate;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public LocalDate getInitialDate() {
-        return initialDate;
-    }
-
-    public void setInitialDate(LocalDate initialDate) {
-        this.initialDate = initialDate;
-    }
-
-    public LocalDate getDepartureDate() {
-        return departureDate;
-    }
-
-    public void setDepartureDate(LocalDate departureDate) {
-        this.departureDate = departureDate;
-    }
-
-    public LocalDateTime getCancelationDate() {
-        return cancelationDate;
-    }
-
-    public void setCancelationDate(LocalDateTime cancelationDate) {
-        this.cancelationDate = cancelationDate;
-    }
 }

@@ -13,7 +13,7 @@
     </changeSet>
     <changeSet author="valverde.thiago" id="add-cancelation-date">
         <addColumn tableName="booking">
-            <column name="cancelation_date" type="DATETIME"/>
+            <column name="cancellation_date" type="DATETIME"/>
         </addColumn>
 
     </changeSet>
