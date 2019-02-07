@@ -4,7 +4,7 @@ import com.upgrade.volcanocamping.exceptions.BookingAlreadyFinishedException;
 import com.upgrade.volcanocamping.exceptions.InvalidDateIntervalException;
 import com.upgrade.volcanocamping.model.Booking;
 import com.upgrade.volcanocamping.model.User;
-import com.upgrade.volcanocamping.repositories.BookingRepository;
+import com.upgrade.volcanocamping.repository.BookingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

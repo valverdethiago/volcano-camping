@@ -1,7 +1,7 @@
 /**
  *
  */
-package com.upgrade.volcanocamping.repositories;
+package com.upgrade.volcanocamping.repository;
 
 import com.upgrade.volcanocamping.model.Booking;
 import org.springframework.data.jpa.repository.JpaRepository;

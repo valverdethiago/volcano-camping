@@ -1,4 +1,4 @@
-package com.upgrade.volcanocamping.repositories;
+package com.upgrade.volcanocamping.repository;
 
 import com.github.javafaker.Faker;
 import com.upgrade.volcanocamping.model.Booking;
