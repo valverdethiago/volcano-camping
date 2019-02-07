@@ -3,6 +3,8 @@ package com.upgrade.volcanocamping.controller;
 import com.github.javafaker.Faker;
 import com.upgrade.volcanocamping.TestUtil;
 import com.upgrade.volcanocamping.dto.BookingDto;
+import com.upgrade.volcanocamping.model.Booking;
+import com.upgrade.volcanocamping.model.User;
 import com.upgrade.volcanocamping.service.BookingService;
 import org.apache.tomcat.jni.Local;
 import org.junit.Before;
@@ -13,18 +15,19 @@ import org.mockito.Mock;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.mockito.Mockito.*;
 import static org.hamcrest.Matchers.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static com.upgrade.volcanocamping.service.BookingServiceImpl.*;
@@ -80,7 +83,7 @@ public class BookingControllerTest {
     }
 
     @Test
-    public void givenEmptyStartDateShouldReturnErrorCode() throws Exception {
+    public void givenEmptyStartDateShouldReturnErrorCodeWhenBooking() throws Exception {
         //Arrange
         Faker faker = new Faker();
         BookingDto bookingDto = new BookingDto();
@@ -94,7 +97,83 @@ public class BookingControllerTest {
                 .content(TestUtil.convertObjectToJsonBytes(bookingDto))
                 .contentType(TestUtil.APPLICATION_JSON_UTF8))
                 //Assert
+                .andExpect(status().is4xxClientError()).andReturn();
+    }
+
+    @Test
+    public void givenEmptyEndDateShouldReturnErrorCodeWhenBooking() throws Exception {
+        //Arrange
+        Faker faker = new Faker();
+        BookingDto bookingDto = new BookingDto();
+        bookingDto.setEmail("fake-user@mail.com");
+        bookingDto.setFullName(faker.name().fullName());
+        bookingDto.setInitialDate(LocalDate.now().plusDays(30));
+        when(bookingService.book(any(), any(), any())).thenThrow(
+                new IllegalArgumentException(INVALID_BOOKING_DATES_EXCEPTION_MESSAGE));
+        //Act
+        mockMvc.perform(post("/api/booking")
+                .content(TestUtil.convertObjectToJsonBytes(bookingDto))
+                .contentType(TestUtil.APPLICATION_JSON_UTF8))
+                //Assert
                 .andExpect(status().is4xxClientError());
+    }
+
+
+    @Test
+    public void givenValidInputShouldReturnBookingWhenBooking() throws Exception {
+        //Arrange
+        Faker faker = new Faker();
+        BookingDto bookingDto = new BookingDto();
+        bookingDto.setEmail("fake-user@mail.com");
+        bookingDto.setFullName(faker.name().fullName());
+        bookingDto.setInitialDate(LocalDate.now().plusDays(1));
+        bookingDto.setDepartureDate(LocalDate.now().plusDays(3));
+        Booking booking = new Booking();
+        booking.setId(new Random().nextLong());
+        booking.setInitialDate(bookingDto.getInitialDate());
+        booking.setDepartureDate(bookingDto.getDepartureDate());
+        User user = new User();
+        user.setEmail(bookingDto.getEmail());
+        user.setFullName(bookingDto.getEmail());
+        booking.setUser(user);
+        when(bookingService.book(any(), any(), any())).thenReturn(booking);
+        //Act
+        mockMvc.perform(post("/api/booking")
+                .content(TestUtil.convertObjectToJsonBytes(bookingDto))
+                .contentType(TestUtil.APPLICATION_JSON_UTF8))
+                //Assert
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", is(not(empty()))))
+                .andExpect(jsonPath("$", is(booking.getId())));
+    }
+
+    @Test
+    public void givenEmptyIdShouldReturnErrorCodeWhenCanceling() throws Exception {
+        //Act
+        mockMvc.perform(delete("/api/booking"))
+                //Assert
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    public void givenInvalidIdShouldReturnErrorCodeWhenCancelling() throws Exception {
+        //Arrange
+        doThrow(new IllegalArgumentException(BOOKING_ID_IS_MANDATORY_EXCEPTION_MESSAGE))
+                .when(bookingService).cancel(anyLong());
+        //Act
+        mockMvc.perform(delete(String.format("/api/booking/%d", new Random().nextLong())))
+                //Assert
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    public void givenValidIdShouldReturnOkWhenCancelling() throws Exception {
+        //Arrange
+        doNothing().when(bookingService).cancel(anyLong());
+        //Act
+        mockMvc.perform(delete(String.format("/api/booking/%d", new Random().nextLong())))
+                //Assert
+                .andExpect(status().isOk());
     }
 
 }

@@ -5,6 +5,7 @@ import com.upgrade.volcanocamping.model.Booking;
 import com.upgrade.volcanocamping.model.User;
 import com.upgrade.volcanocamping.service.BookingService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,9 +13,11 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.websocket.server.PathParam;
 import java.time.LocalDate;
+import java.util.AbstractMap;
 import java.util.Collection;
 
 @RestController
+@Order(2)
 public class BookingController {
 
     private final BookingService bookingService;
@@ -42,8 +45,17 @@ public class BookingController {
 
     @DeleteMapping(path = "/api/booking/{bookingId}")
     @ResponseStatus(value = HttpStatus.OK)
-    public void cancel(@PathParam("bookingId") Long bookingId) {
+    public void cancel(@PathVariable(name="bookingId", required = true) Long bookingId) {
         this.bookingService.cancel(bookingId);
     }
 
+    /**
+     * Global Exception handler for all exceptions.
+     */
+    @ExceptionHandler({Exception.class})
+    public ResponseEntity<AbstractMap.SimpleEntry<String, String>> handle(Exception exception) {
+        AbstractMap.SimpleEntry<String, String> response =
+                new AbstractMap.SimpleEntry<>("message", exception.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
 }
