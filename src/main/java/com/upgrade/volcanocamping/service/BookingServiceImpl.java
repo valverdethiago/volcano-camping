@@ -21,11 +21,11 @@ import java.util.stream.Stream;
 @Service
 public class BookingServiceImpl implements BookingService {
 
-    protected static final String INVALID_BOOKING_DATES_EXCEPTION_MESSAGE =
+    public static final String INVALID_BOOKING_DATES_EXCEPTION_MESSAGE =
             "Invalid booking dates";
-    protected static final String MAX_DAYS_LIMIT_EXCEPTION_MESSAGE =
+    public static final String MAX_DAYS_LIMIT_EXCEPTION_MESSAGE =
             "The campsite can be reserved for max 3 days";
-    protected static final String INVALID_LIMITS =
+    public static final String INVALID_LIMITS =
             "The campsite can be reserved minimum 1 day(s) ahead of arrival and up to 1 month in advance";
     public static final String BOOKING_ID_IS_MANDATORY_EXCEPTION_MESSAGE = "Booking ID is mandatory";
     public static final String INVALID_BOOKING_ID_EXCEPTION_MESSAGE = "Invalid Booking ID";
@@ -59,8 +59,8 @@ public class BookingServiceImpl implements BookingService {
                 if (isDateWithinPeriod(date, booking.getInitialDate(), booking.getDepartureDate())) {
                     availableDates.remove(date);
                     continue dateLoop;
-                } else
-                    availableDates.add(date);
+                }
+                availableDates.add(date);
             }
         }
         return availableDates;

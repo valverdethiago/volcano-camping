@@ -8,9 +8,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @ControllerAdvice
-@Component
+@EnableWebMvc
 public class GlobalExceptionHandler {
 
   private static final Logger LOG = LoggerFactory.getLogger(GlobalExceptionHandler.class);
@@ -23,7 +24,7 @@ public class GlobalExceptionHandler {
     // general exception
     LOG.error("Exception: Unable to process this request. ", exception);
     AbstractMap.SimpleEntry<String, String> response =
-        new AbstractMap.SimpleEntry<>("message", "Unable to process this request.");
+        new AbstractMap.SimpleEntry<>("message",exception.getMessage());
     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
   }
 }
