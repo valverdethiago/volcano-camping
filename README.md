@@ -70,3 +70,12 @@ gradle build bootJar
 ```
 This will generate a jar file under build/libs folder
 
+
+## Import the project into IDE ##
+This project uses lombok plugin to reduce the boilerplate code. To import it successfully on your favorite IDE you'll need to add the lombok plugin, eighter on Eclipse or Intellij IDEA. 
+
+It's necessary to enable Annotation Processing, just as the example above in Intellij IDEA:
+
+![alt text](./docs/intellij_annotation_processor.png)
+
+
