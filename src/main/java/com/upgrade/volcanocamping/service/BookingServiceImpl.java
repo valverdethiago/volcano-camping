@@ -2,9 +2,13 @@ package com.upgrade.volcanocamping.service;
 
 import com.upgrade.volcanocamping.exceptions.BookingAlreadyFinishedException;
 import com.upgrade.volcanocamping.exceptions.InvalidDateIntervalException;
+import com.upgrade.volcanocamping.lock.BlockingResource;
 import com.upgrade.volcanocamping.model.Booking;
 import com.upgrade.volcanocamping.model.User;
 import com.upgrade.volcanocamping.repository.BookingRepository;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +23,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
+@AllArgsConstructor
 public class BookingServiceImpl implements BookingService {
 
     public static final String INVALID_BOOKING_DATES_EXCEPTION_MESSAGE =
@@ -29,13 +34,12 @@ public class BookingServiceImpl implements BookingService {
             "The campsite can be reserved minimum 1 day(s) ahead of arrival and up to 1 month in advance";
     public static final String BOOKING_ID_IS_MANDATORY_EXCEPTION_MESSAGE = "Booking ID is mandatory";
     public static final String INVALID_BOOKING_ID_EXCEPTION_MESSAGE = "Invalid Booking ID";
-
-    private final BookingRepository bookingRepository;
+    public static final String RESOURCE_ID = "booking";
 
     @Autowired
-    public BookingServiceImpl(BookingRepository bookingRepository) {
-        this.bookingRepository = bookingRepository;
-    }
+    @Getter
+    @Setter
+    private BookingRepository bookingRepository;
 
     @Override
     public Set<LocalDate> findAvailableDates(LocalDate startDate, LocalDate endDate) {
@@ -71,6 +75,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
+    @BlockingResource(resourceId = RESOURCE_ID)
     public Booking book(User user, LocalDate startDate, LocalDate endDate) {
         if (startDate == null
                 || endDate == null
