@@ -5,6 +5,7 @@ bin/*
 /.iml
 .gradle/*
 gradle/*
+classes/*
 out/*
 .idea/*
 build/*
