@@ -26,7 +26,7 @@ For sake of simplicity assume the check-in & check-out time is 12:00 AM
 - There are no restrictions on how reservations are stored as as long as system constraints are not violated.
 
 ## Documentation ##
-A complete documentation of the endpoints is available at the  [file](./docs/api-doc/pdf) 
+A complete documentation of the endpoints is available at the  [file](./docs/api-doc.pdf) 
 
 ## Solution ##
 
