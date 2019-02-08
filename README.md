@@ -26,7 +26,7 @@ For sake of simplicity assume the check-in & check-out time is 12:00 AM
 - There are no restrictions on how reservations are stored as as long as system constraints are not violated.
 
 ## Documentation ##
-A complete documentation of the endpoints is available at the file ./docs/api-doc/pdf
+A complete documentation of the endpoints is available at the  [file](./docs/api-doc/pdf) 
 
 ## Solution ##
 
@@ -56,6 +56,17 @@ To build the app the machine should have java 8 or later version and version 5.2
 gradle build
 ```
 
-This will run all unit tests and build the jar file that runs it
+This will run all unit tests and build the jar file that runs it.
 
+To run the solution directly from gradle:
+```
+gradle bootRun
+```
+
+To build the executable jar to run the solution without gradle
+
+```
+gradle build bootJar
+```
+This will generate a jar file under build/libs folder
 
