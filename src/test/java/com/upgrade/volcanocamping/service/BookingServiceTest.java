@@ -37,6 +37,7 @@ public class BookingServiceTest {
     private BookingRepository bookingRepository;
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
+    private Faker faker = new Faker();
 
     @Before
     public void setup() {
@@ -215,18 +216,19 @@ public class BookingServiceTest {
                                       LocalDate initialDate,
                                       LocalDate departureDate) {
         User user = createFakeUser(memberEmail);
-        Booking booking = new Booking();
-        booking.setUser(user);
-        booking.setInitialDate(initialDate);
-        booking.setDepartureDate(departureDate);
+        Booking booking = Booking.builder()
+                .user(user)
+                .initialDate(initialDate)
+                .departureDate(departureDate)
+                .build();
         return booking;
     }
 
     private User createFakeUser(String memberEmail) {
-        Faker faker = new Faker();
-        User user = new User();
-        user.setEmail(memberEmail);
-        user.setFullName(faker.name().fullName());
+        User user = User.builder()
+                .email(memberEmail)
+                .fullName(faker.name().fullName())
+                .build();
         return user;
     }
 }

@@ -45,6 +45,7 @@ public class BookingControllerTest {
     @Mock
     private BookingService bookingService;
     private MockMvc mockMvc;
+    private Faker faker = new Faker();
 
     @Before
     public void setup() {
@@ -85,11 +86,11 @@ public class BookingControllerTest {
     @Test
     public void givenEmptyStartDateShouldReturnErrorCodeWhenBooking() throws Exception {
         //Arrange
-        Faker faker = new Faker();
-        BookingDto bookingDto = new BookingDto();
-        bookingDto.setEmail("fake-user@mail.com");
-        bookingDto.setFullName(faker.name().fullName());
-        bookingDto.setDepartureDate(LocalDate.now().plusDays(30));
+        BookingDto bookingDto = BookingDto.builder()
+                .email("fake-user@mail.com")
+                .fullName(faker.name().fullName())
+                .initialDate(LocalDate.now().plusDays(30))
+                .build();
         when(bookingService.book(any(), any(), any())).thenThrow(
                 new IllegalArgumentException(INVALID_BOOKING_DATES_EXCEPTION_MESSAGE));
         //Act
@@ -103,11 +104,11 @@ public class BookingControllerTest {
     @Test
     public void givenEmptyEndDateShouldReturnErrorCodeWhenBooking() throws Exception {
         //Arrange
-        Faker faker = new Faker();
-        BookingDto bookingDto = new BookingDto();
-        bookingDto.setEmail("fake-user@mail.com");
-        bookingDto.setFullName(faker.name().fullName());
-        bookingDto.setInitialDate(LocalDate.now().plusDays(30));
+        BookingDto bookingDto = BookingDto.builder()
+                .email("fake-user@mail.com")
+                .fullName(faker.name().fullName())
+                .initialDate(LocalDate.now().plusDays(30))
+                .build();
         when(bookingService.book(any(), any(), any())).thenThrow(
                 new IllegalArgumentException(INVALID_BOOKING_DATES_EXCEPTION_MESSAGE));
         //Act
@@ -122,20 +123,20 @@ public class BookingControllerTest {
     @Test
     public void givenValidInputShouldReturnBookingWhenBooking() throws Exception {
         //Arrange
-        Faker faker = new Faker();
-        BookingDto bookingDto = new BookingDto();
-        bookingDto.setEmail("fake-user@mail.com");
-        bookingDto.setFullName(faker.name().fullName());
-        bookingDto.setInitialDate(LocalDate.now().plusDays(1));
-        bookingDto.setDepartureDate(LocalDate.now().plusDays(3));
-        Booking booking = new Booking();
-        booking.setId(new Random().nextLong());
-        booking.setInitialDate(bookingDto.getInitialDate());
-        booking.setDepartureDate(bookingDto.getDepartureDate());
-        User user = new User();
-        user.setEmail(bookingDto.getEmail());
-        user.setFullName(bookingDto.getEmail());
-        booking.setUser(user);
+        BookingDto bookingDto = BookingDto.builder()
+                .email("fake-user@mail.com")
+                .fullName(faker.name().fullName())
+                .initialDate(LocalDate.now().plusDays(1))
+                .departureDate(LocalDate.now().plusDays(3))
+                .build();
+        User user = User.builder().email(bookingDto.getEmail())
+                .fullName(bookingDto.getFullName())
+                .build();
+        Booking booking = Booking.builder().id(new Random().nextLong())
+                .initialDate(bookingDto.getInitialDate())
+                .departureDate(bookingDto.getDepartureDate())
+                .user(user)
+                .build();
         when(bookingService.book(any(), any(), any())).thenReturn(booking);
         //Act
         mockMvc.perform(post("/api/booking")

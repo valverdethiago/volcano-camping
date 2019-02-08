@@ -66,13 +66,15 @@ public class BookingRepositoryTest {
 	private Booking createAndSaveReservation(String memberEmail,
 											 LocalDate initialDate,
 											 LocalDate departureDate) {
-		User user = new User();
-		user.setEmail(memberEmail);
-		user.setFullName(faker.name().fullName());
-		Booking booking = new Booking();
-		booking.setUser(user);
-		booking.setInitialDate(initialDate);
-		booking.setDepartureDate(departureDate);
+		User user = User.builder()
+				.email(memberEmail)
+				.fullName(faker.name().fullName())
+				.build();
+		Booking booking = Booking.builder()
+				.user(user)
+				.initialDate(initialDate)
+				.departureDate(departureDate)
+				.build();
 		return this.bookingRepository.save(booking);
 	}
 
